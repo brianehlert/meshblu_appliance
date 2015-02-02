@@ -69,7 +69,7 @@ sudo chmod -R ugo+rw /var/www
 
 # install Meshblu
 cd /var/www/meshblu
-sudo npm install
+sudo npm install --production --loglevel warn
 
 # Meshblu listener ports: 3000 (Meshblu) 5683 (CoAP) 1883 (MQTT) 
 # Services listener ports:  6379 (redis) 27017 (MongoDB)
