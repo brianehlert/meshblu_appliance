@@ -56,7 +56,7 @@ sudo cp -r ~/meshblu/public /var/www/meshblu/public
 sudo cp -r ~/meshblu/lib /var/www/meshblu/lib
 
 # copy the forever configuration  "forever start server.js --http"
-sudo cp ~/meshblu.conf /etc/init/meshblu.conf
+sudo cp ~/ubuntu_meshblu.conf /etc/init/meshblu.conf
 
 # set the appliance specific server.js config
 sudo cp ~/meshbluConfig.js /var/www/meshblu/config.js
