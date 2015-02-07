@@ -46,24 +46,21 @@ sudo npm install -g forever
 # directories
 sudo mkdir /var/log/meshblu
 sudo mkdir /var/www
-sudo mkdir /var/www/meshblu
 
-# copy the meshblu build to the VM, or mount the image or source.
+# add permissions so things will work properly
+sudo chmod -R ugo+rw /var/log/meshblu
+sudo chmod -R ugo+rw /var/www
 
-# copy the meshblu pull to /var/www
-sudo cp ~/meshblu/* /var/www/meshblu
-sudo cp -r ~/meshblu/public /var/www/meshblu/public
-sudo cp -r ~/meshblu/lib /var/www/meshblu/lib
+# Extract the meshblu build to /var/www
+cd /var/www
+tar -xzvf ~/*.tgz
+mv package meshblu
 
 # copy the forever configuration  "forever start server.js --http"
 sudo cp ~/ubuntu_meshblu.conf /etc/init/meshblu.conf
 
 # set the appliance specific server.js config
 sudo cp ~/meshbluConfig.js /var/www/meshblu/config.js
-
-# add permissions so things will work properly
-sudo chmod -R ugo+rw /var/log/meshblu
-sudo chmod -R ugo+rw /var/www
 
 # install Meshblu
 cd /var/www/meshblu
