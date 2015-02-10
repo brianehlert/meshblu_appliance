@@ -43,10 +43,10 @@ The scripts reboot the VM at the end.
 
 Once the VM is running again, you can verify that Meshblu is running using the REST command:
 
-Invoke-RestMethod -URI http://<your VM ip>:3000/status -ContentType "application/json" -Method Get
+```Invoke-RestMethod -URI http://<your VM ip>:3000/status -ContentType "application/json" -Method Get```
 
-```You should get the return:
-meshblu                                                                                                                                                                           
+You should get the return:
+```meshblu                                                                                                                                                                           
 -------                                                                                                                                                                           
 online                                                                                                                                                                            
 ```
