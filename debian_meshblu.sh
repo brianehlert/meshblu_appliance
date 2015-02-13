@@ -49,16 +49,16 @@ npm install -g forever
 sudo apt-get install -y python-psutil python3-psutil
 
 # directories
-mkdir /var/log/blu
-mkdir /var/blu
-mkdir /var/blu/meshblu
+mkdir /opt/blu
+mkdir /opt/blu/log
+mkdir /opt/blu/meshblu
 
 # copy the meshblu build to the VM, or mount the image or source.
 
 # copy the meshblu pull to /var/www
-cp ~/meshblu/* /var/blu/meshblu
-cp -r ~/meshblu/public /var/blu/meshblu/public
-cp -r ~/meshblu/lib /var/blu/meshblu/lib
+cp ~/meshblu/* /opt/blu/meshblu
+cp -r ~/meshblu/public /opt/blu/meshblu/public
+cp -r ~/meshblu/lib /opt/blu/meshblu/lib
 
 # copy the sysvinit configuration for forever  "forever start server.js --http"
 # http://labs.telasocial.com/nodejs-forever-daemon/
@@ -67,11 +67,10 @@ chmod 755 /etc/init.d/meshblu
 update-rc.d meshblu defaults
 
 # set the appliance specific server.js config
-cp ~/meshbluConfig.js /var/blu/meshblu/config.js
+cp ~/meshbluConfig.js /opt/blu/meshblu/config.js
 
 # add permissions so things will work properly
-chmod -R ugo+rw /var/log/blu
-chmod -R ugo+rw /var/blu
+chmod -R ugo+rw /opt/blu
 
 # install Meshblu
 cd /var/blu/meshblu

@@ -47,26 +47,25 @@ sudo npm install -g forever
 sudo apt-get install -y python-psutil python3-psutil
 
 # directories
-sudo mkdir /var/log/blu
-sudo mkdir /var/blu
+sudo mkdir /opt/blu
+sudo mkdir /opt/blu/log
 
 # add permissions so things will work properly
-sudo chmod -R ugo+rw /var/log/blu
-sudo chmod -R ugo+rw /var/blu
+sudo chmod -R ugo+rw /opt/blu
 
 # Extract the meshblu build to /var/www
-cd /var/blu
-tar -xzvf ~/*.tgz
+cd /opt/blu
+tar -xzvf ~/*meshblu*.tgz
 mv package meshblu
 
 # copy the forever configuration  "forever start server.js --http"
 sudo cp ~/ubuntu_meshblu.conf /etc/init/meshblu.conf
 
 # set the appliance specific server.js config
-sudo cp ~/meshbluConfig.js /var/blu/meshblu/config.js
+sudo cp ~/meshbluConfig.js /opt/blu/meshblu/config.js
 
 # install Meshblu
-cd /var/blu/meshblu
+cd /opt/blu/meshblu
 sudo npm install --production --loglevel warn
 
 # Meshblu listener ports: 3000 (Meshblu) 5683 (CoAP) 1883 (MQTT) 
