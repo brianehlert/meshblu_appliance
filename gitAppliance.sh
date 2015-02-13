@@ -50,25 +50,25 @@ sudo npm install --unsafe-perm -g bcrypt
 sudo npm install -g forever
 
 # directories
-sudo mkdir /var/log/meshblu
-sudo mkdir /var/www
-sudo mkdir /var/www/meshblu
+sudo mkdir /var/log/blu
+sudo mkdir /var/blu
+sudo mkdir /var/blu/meshblu
 
-# git pull meshblu to /var/www
-sudo git clone https://github.com/octoblu/meshblu.git /var/www/meshblu
+# git pull meshblu to /var/blu
+sudo git clone https://github.com/octoblu/meshblu.git /var/blu/meshblu
 
 # copy the forever configuration  "forever start server.js --http"
 sudo cp ~/meshblu.conf /etc/init/meshblu.conf
 
 # set the appliance specific server.js config
-sudo cp ~/meshbluConfig.js /var/www/meshblu/config.js
+sudo cp ~/meshbluConfig.js /var/blu/meshblu/config.js
 
 # add permissions so things will work properly
-sudo chmod -R ugo+rw /var/log/meshblu
-sudo chmod -R ugo+rw /var/www
+sudo chmod -R ugo+rw /var/log/blu
+sudo chmod -R ugo+rw /var/blu
 
 # install Meshblu
-cd /var/www/meshblu
+cd /var/blu/meshblu
 sudo npm install --production --loglevel warn
 
 # Meshblu listener ports: 3000 (Meshblu) 5683 (CoAP) 1883 (MQTT) 
@@ -88,3 +88,4 @@ sudo shutdown now -r
 
 # On reboot the VM will be working.
 # PowerShell verify it is running: Invoke-RestMethod -URI http://<IP address>:3000/status -ContentType "application/json" -Method Get
+# note: there is a random bug in Redis Server where it won't start and thus no authentication.  One fix is: "sudo rm /var/run/redis/redis-server.pid" and then reboot.

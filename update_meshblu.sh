@@ -7,15 +7,17 @@
 # This requires an internet connection to pull source.
 
 # verify that Meshblu exists
-if [ ! -f /var/www/meshblu/server.js ] ; then
+if [ ! -f /var/blu/meshblu/server.js ] ; then
     echo "Meshblu server.js does not exist"
 fi
 
 # add permissions so things will work properly
-sudo chmod -R ugo+rw /var/www
+sudo chmod -R ugo+rw /var/blu
+
+# kill the meshblu service
 
 
-# Extract the meshblu build to /var/www
+# Extract the meshblu build to /var/blu
 cd /var/www
 tar -xzvf ~/*.tgz --overwrite
 mv package meshblu
@@ -24,10 +26,10 @@ mv package meshblu
 sudo cp ~/ubuntu_meshblu.conf /etc/init/meshblu.conf
 
 # set the appliance specific server.js config
-sudo cp ~/meshbluConfig.js /var/www/meshblu/config.js
+sudo cp ~/meshbluConfig.js /var/blu/meshblu/config.js
 
 # install Meshblu
-cd /var/www/meshblu
+cd /var/blu/meshblu
 sudo npm install --production --loglevel warn
 
 # Meshblu listener ports: 3000 (Meshblu) 5683 (CoAP) 1883 (MQTT) 

@@ -43,16 +43,19 @@ sudo npm install --unsafe-perm -g bcrypt
 # install forever to run the servers as services
 sudo npm install -g forever
 
+# python scripting support
+sudo apt-get install -y python-psutil python3-psutil
+
 # directories
-sudo mkdir /var/log/meshblu
-sudo mkdir /var/www
+sudo mkdir /var/log/blu
+sudo mkdir /var/blu
 
 # add permissions so things will work properly
-sudo chmod -R ugo+rw /var/log/meshblu
-sudo chmod -R ugo+rw /var/www
+sudo chmod -R ugo+rw /var/log/blu
+sudo chmod -R ugo+rw /var/blu
 
 # Extract the meshblu build to /var/www
-cd /var/www
+cd /var/blu
 tar -xzvf ~/*.tgz
 mv package meshblu
 
@@ -60,10 +63,10 @@ mv package meshblu
 sudo cp ~/ubuntu_meshblu.conf /etc/init/meshblu.conf
 
 # set the appliance specific server.js config
-sudo cp ~/meshbluConfig.js /var/www/meshblu/config.js
+sudo cp ~/meshbluConfig.js /var/blu/meshblu/config.js
 
 # install Meshblu
-cd /var/www/meshblu
+cd /var/blu/meshblu
 sudo npm install --production --loglevel warn
 
 # Meshblu listener ports: 3000 (Meshblu) 5683 (CoAP) 1883 (MQTT) 

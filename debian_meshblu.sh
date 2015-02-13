@@ -1,5 +1,5 @@
 #!/bin/sh 
-# Ubuntu 14.10
+# Debian 7
 # run this script outside of the /meshblu folder as it deletes the folder
 # Copy the Meshblu folder
 # copy this script
@@ -45,17 +45,20 @@ npm install --unsafe-perm -g bcrypt
 # install forever to run the servers as services
 npm install -g forever
 
+# python scripting support
+sudo apt-get install -y python-psutil python3-psutil
+
 # directories
-mkdir /var/log/meshblu
-mkdir /var/www
-mkdir /var/www/meshblu
+mkdir /var/log/blu
+mkdir /var/blu
+mkdir /var/blu/meshblu
 
 # copy the meshblu build to the VM, or mount the image or source.
 
 # copy the meshblu pull to /var/www
-cp ~/meshblu/* /var/www/meshblu
-cp -r ~/meshblu/public /var/www/meshblu/public
-cp -r ~/meshblu/lib /var/www/meshblu/lib
+cp ~/meshblu/* /var/blu/meshblu
+cp -r ~/meshblu/public /var/blu/meshblu/public
+cp -r ~/meshblu/lib /var/blu/meshblu/lib
 
 # copy the sysvinit configuration for forever  "forever start server.js --http"
 # http://labs.telasocial.com/nodejs-forever-daemon/
@@ -64,14 +67,14 @@ chmod 755 /etc/init.d/meshblu
 update-rc.d meshblu defaults
 
 # set the appliance specific server.js config
-cp ~/meshbluConfig.js /var/www/meshblu/config.js
+cp ~/meshbluConfig.js /var/blu/meshblu/config.js
 
 # add permissions so things will work properly
-chmod -R ugo+rw /var/log/meshblu
-chmod -R ugo+rw /var/www
+chmod -R ugo+rw /var/log/blu
+chmod -R ugo+rw /var/blu
 
 # install Meshblu
-cd /var/www/meshblu
+cd /var/blu/meshblu
 npm install --production --loglevel warn
 
 # Meshblu listener ports: 3000 (Meshblu) 5683 (CoAP) 1883 (MQTT) 
