@@ -46,6 +46,15 @@ sudo npm install -g forever
 # python scripting support
 sudo apt-get install -y python-psutil python3-psutil
 
+# architecture support
+if [ `getconf LONG_BIT` = "64" ]
+	then
+		echo "64-bit system. Adding 32-bit library support."
+		sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386
+	else
+		echo "Assuming 32-bit system. Nothing more to see here. Move along."
+fi
+
 # directories
 sudo mkdir /opt/blu
 sudo mkdir /opt/blu/log

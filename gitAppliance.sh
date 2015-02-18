@@ -58,7 +58,7 @@ sudo mkdir /opt/blu/log
 sudo git clone https://github.com/octoblu/meshblu.git /opt/blu/meshblu
 
 # copy the forever configuration  "forever start server.js --http"
-sudo cp ~/meshblu.conf /etc/init/meshblu.conf
+sudo cp ~/ubuntu_meshblu.conf /etc/init/meshblu.conf
 
 # set the appliance specific server.js config
 sudo cp ~/meshbluConfig.js /opt/blu/meshblu/config.js

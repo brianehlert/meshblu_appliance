@@ -22,7 +22,7 @@ apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 echo 'deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list
 
 # Node from NodeSource  (this runs 'apt-get update')
-wget -O node-setup.sh https://deb.nodesource.com/setup
+wget -O node-setup.sh https://deb.nodesource.com/setup --no-check-certificate
 chmod +x node-setup.sh
 ./node-setup.sh
 
@@ -47,6 +47,15 @@ npm install -g forever
 
 # python scripting support
 sudo apt-get install -y python-psutil python3-psutil
+
+# architecture support
+if [ `getconf LONG_BIT` = "64" ]
+	then
+		echo "64-bit system. Adding 32-bit library support."
+		sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386
+	else
+		echo "Assuming 32-bit system. Nothing more to see here. Move along."
+fi
 
 # directories
 mkdir /opt/blu
@@ -73,7 +82,7 @@ cp ~/meshbluConfig.js /opt/blu/meshblu/config.js
 chmod -R ugo+rw /opt/blu
 
 # install Meshblu
-cd /var/blu/meshblu
+cd /opt/blu/meshblu
 npm install --production --loglevel warn
 
 # Meshblu listener ports: 3000 (Meshblu) 5683 (CoAP) 1883 (MQTT) 
