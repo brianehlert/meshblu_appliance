@@ -7,7 +7,7 @@
 # This requires an internet connection to pull source.
 
 # verify that Meshblu exists
-if [ ! -f /var/blu/meshblu/server.js ] ; then
+if [ ! -f /opt/blu/meshblu/server.js ] ; then
     echo "Meshblu server.js does not exist"
 fi
 

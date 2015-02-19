@@ -50,7 +50,7 @@ sudo apt-get install -y python-psutil python3-psutil
 if [ `getconf LONG_BIT` = "64" ]
 	then
 		echo "64-bit system. Adding 32-bit library support."
-		sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386
+		sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
 	else
 		echo "Assuming 32-bit system. Nothing more to see here. Move along."
 fi
@@ -87,6 +87,7 @@ sudo ufw allow 3000/tcp   # meshblu api
 sudo ufw allow 1883/tcp   # mqtt
 sudo ufw allow 5683/tcp    # coap
 sudo ufw allow 22/tcp    # ssh
+sudo ufw allow 9337/tcp   # sdx
 sudo ufw --force enable
 
 # reboot the VM
