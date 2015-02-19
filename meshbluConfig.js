@@ -11,16 +11,16 @@ module.exports = {
     port: "6379"
   },
   // this skynet cloud instance / object uuid - each one should be unique - this should be auto generated on very first boot
-  // uuid: '',
-  // token: '',
+   uuid: '',
+   token: '',
   // broadcastActivity: false,  
   // if you want to resolve message up to another skynet server:
   // this should be able to be set through some interface / console of the appliance
   parentConnection: {
-  //  uuid: '',
-  //  token: '',
-  //  server: 'skynet.im',
-  //  port: 80
+    uuid: '',
+    token: '',
+    server: '',
+    port: 80
   },
   coap: {
     port: 5683,
