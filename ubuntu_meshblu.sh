@@ -20,8 +20,9 @@ sudo apt-get install -y libzmq-dev
 # MongoDB (current instructions: http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/ )
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+sudo add-apt-repository -y ppa:rwky/redis
 
-# Node from NodeSource  (this runs 'apt-get update')
+# Node from NodeSource  (this runs 'apt-get update' that is why we add the repos prior)
 sudo curl -sL https://deb.nodesource.com/setup | sudo bash -
 
 ### install servers / services
@@ -34,10 +35,12 @@ sudo npm -g update npm
 # install MongoDB - automatically sets is as a service
 sudo apt-get install -y mongodb-org
 
-# install Redis server - automatically sets it as a service
+# install Redis server - automatically sets it as an Upstart service
+# this pulls the latest from Redis.io per: https://launchpad.net/~rwky/+archive/ubuntu/redis
 sudo apt-get install -y redis-server
 
 # global install of bcrypt
+sudo npm install -g node-gyp
 sudo npm install --unsafe-perm -g bcrypt
 
 # install forever to run the servers as services
