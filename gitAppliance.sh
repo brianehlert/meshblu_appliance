@@ -39,7 +39,7 @@ sudo apt-get install -y mongodb-org
 sudo apt-get install -y redis-server
 
 # install git client
-sudo apt-get install -y git
+sudo apt-get install -y git-core
 
 # set git to use https instead: of git:
 sudo git config --global url.https://.insteadOf git://
