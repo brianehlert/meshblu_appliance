@@ -44,9 +44,9 @@ sudo apt-get install -y git-core
 # set git to use https instead: of git:
 sudo git config --global url.https://.insteadOf git://
 
-# global install of bcrypt
+# global install of ...
 sudo npm install -g node-gyp
-sudo npm install --unsafe-perm -g bcrypt
+# sudo npm install --unsafe-perm -g bcrypt
 
 # install forever to run the servers as services
 sudo npm install -g forever
