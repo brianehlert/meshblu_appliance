@@ -1,0 +1,48 @@
+#!/bin/sh
+#/etc/init.d/meshblu
+
+### BEGIN INIT INFO
+# Provides: meshblu
+# Required-Start: $network $syslog
+# Required-Stop:
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description:    Meshblu - the message server for all sysvinit configuration
+### END INIT INFO
+
+case "$1" in
+start)
+    # always try to rotate logs
+    for file in /opt/blu/log/*.log;
+        do
+                if [ -z "$file" ]; then
+                        mv -nv -- "$file" "$file.$(date +%Y%m%d_%H%M%S.txt)"
+                fi
+        done
+    sleep 30
+	
+	FOREVER_ROOT=/opt/blu
+	
+    exec forever --sourceDir /opt/blu/meshblu \
+    --pidFile /opt/blu/meshblu.pid \
+    --minUptime 1000 \
+    --spinSleepTime 1000 \
+    --uid "meshblu" \
+	start -a -l /opt/blu/log/meshblu.log \
+    -c /usr/local/bin/node server.js --http --coap --mqtt
+  ;;
+stop)
+# the problem here is that stop fails due to the process forking.
+  meshbluPid=$(cat meshblu.pid)
+  exec forever stop $meshbluPid
+  ;;
+status)
+  exec service meshblu status
+  ;;
+*)
+  echo "Usage: /etc/init.d/meshblu {start|stop|status}"
+  exit 1
+  ;;
+esac
+
+exit 0
