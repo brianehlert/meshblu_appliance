@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/bash 
 # Ubuntu 14.10
 # run this script outside of the /meshblu folder as it deletes the folder
 # Copy the Meshblu folder
