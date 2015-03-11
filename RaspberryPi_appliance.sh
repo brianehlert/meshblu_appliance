@@ -1,9 +1,10 @@
 #!/bin/bash
-# Raspian
+# Raspian (Noobs) on pi B
 # download this script to your home folder
 # set the permissions:  chmod +x install.sh
 # run the script (without sudo):  ./install.sh
 # This requires an internet connection to pull source.
+# this builds Meshblu and Gateblu in place on a RaspberryPi and sets them to start as background processes.
 
 # Install node for ARM
 echo "deb http://node-arm.herokuapp.com/ /" | sudo tee --append /etc/apt/sources.list
@@ -18,13 +19,17 @@ sudo git config --global url.https://.insteadOf git://
 
 # install forever to run the blu servers as services
 sudo npm install -y -g forever
-sudo apt-get 
+
 # install of node-gyp for building
 sudo npm install -y -g node-gyp
 
 # Install Upstart - used due to process forking and sysvinit losing track of the fork
-echo "Everything will stop here.  You must respond to this !!!"
-echo "yes, you want to respond:  Yes, do as I say! "
+echo ""
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo "!!! Everything will stop here.  You must respond to this !!!"
+echo "!!! yes, you want to respond:  Yes, do as I say!         !!!"
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo ""
 sudo apt-get install upstart
 
 # Install uuid-runtime for configuration
@@ -51,6 +56,7 @@ sudo chmod -R ugo+rw /opt/blu
 
 # Install Meshblu using npm
 cd /opt/blu/meshblu
+npm install mosca --save
 sudo npm install --production --unsafe-perm
 
 # Add the Upstart script from meshblu_appliance
@@ -81,10 +87,12 @@ echo "  }," >> /opt/blu/meshblu/config.js
 echo "};" >> /opt/blu/meshblu/config.js
 	
 # To configure this Meshblu instance to call home to Octoblu (the cloud service):
-#		a. Uncomment the parent connection section
-#		b. Start the service
+#		a. stop the service if it is running
+#          sudo service meshblu stop
+#		b. Uncomment the parent connection section and note the UUID in the section
+#		c. Start the service
 #          sudo service meshblu start
-#		c. Claim the device in Octoblu using the parent connection UUID
+#		d. Claim the device in Octoblu using the parent connection UUID
 
 #	For testing the Service can be started and stopped manually by:
 #	sudo service meshblu start
@@ -92,9 +100,6 @@ echo "};" >> /opt/blu/meshblu/config.js
 #	Logs at:  /opt/blu/log
 
 ### Adding Gateblu to the already installed Meshblu:
-
-# Global install of bcrypt to overcome problems
-# sudo npm install --unsafe-perm -g node-gyp
 
 # Create the directory
 sudo mkdir -p /opt/blu/gateblu-forever
@@ -104,7 +109,6 @@ sudo git clone https://github.com/octoblu/gateblu-forever.git /opt/blu/gateblu-f
 
 # Remove folders unnecessary for production
 sudo rm -r /opt/blu/gateblu-forever/test
-sudo rm -r /opt/blu/gateblu-forever/examples
 
 # Remove unnecessary files
 sudo rm /opt/blu/gateblu-forever/*.sublime*
@@ -136,7 +140,8 @@ echo "}" >> /opt/blu/gateblu-forever/meshblu.json
 echo "Starting meshblu"
 /usr/local/bin/node /opt/blu/meshblu/server.js --http > /dev/null &
 meshblu_pid=$!
-sleep 30
+echo "giving time for start-up to complete.."
+sleep 90
 
 echo "Registering the gateway"
 curl -XPOST http://localhost:3000/devices --data \
@@ -153,3 +158,5 @@ sudo shutdown now -r
 # On reboot the VM will be working.
 # PowerShell verify it is running: Invoke-RestMethod -URI http://<IP address>:3000/status -ContentType "application/json" -Method Get
 # The --unsafe-perm option is used as a workaround to npm and sudo and node-gyp: https://github.com/TooTallNate/node-gyp/issues/115
+
+# there will be build errors with mosca, and then npm will retry and it should succeed on the retry.
