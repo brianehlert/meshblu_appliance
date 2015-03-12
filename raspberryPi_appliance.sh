@@ -90,6 +90,7 @@ echo "};" >> /opt/blu/meshblu/config.js
 #		a. stop the service if it is running
 #          sudo service meshblu stop
 #		b. Uncomment the parent connection section and note the UUID in the section
+#		   This UUID and Token is the device identity in the Octoblu database.
 #		c. Start the service
 #          sudo service meshblu start
 #		d. Claim the device in Octoblu using the parent connection UUID
