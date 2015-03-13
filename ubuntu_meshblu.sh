@@ -40,11 +40,14 @@ sudo apt-get install -y mongodb-org
 sudo apt-get install -y redis-server
 
 # global install of bcrypt
-sudo npm install -g node-gyp
-sudo npm install --unsafe-perm -g bcrypt
+# sudo npm install -g node-gyp
+# sudo npm install --unsafe-perm -g bcrypt
 
 # install forever to run the servers as services
 sudo npm install -g forever
+
+# Install uuid-runtime for configuration
+sudo apt-get install -y uuid-runtime
 
 # python scripting support
 sudo apt-get install -y python-psutil python3-psutil
@@ -58,27 +61,86 @@ if [ `getconf LONG_BIT` = "64" ]
 		echo "Assuming 32-bit system. Nothing more to see here. Move along."
 fi
 
-# directories
-sudo mkdir /opt/blu
-sudo mkdir /opt/blu/log
+### Install Meshblu the messaging platform
+# Make the meshblu directories
+sudo mkdir -p /opt/blu/meshblu
+sudo mkdir -p /opt/blu/log
 
-# add permissions so things will work properly
+# Clone Meshblu from GitHub
+sudo git clone https://github.com/octoblu/meshblu.git /opt/blu/meshblu
+
+# Remove folders unnecessary for production
+sudo rm -r /opt/blu/meshblu/test
+sudo rm -r /opt/blu/meshblu/docker
+
+# Remove unnecessary files
+sudo rm /opt/blu/meshblu/config.js
+sudo rm /opt/blu/meshblu/Dockerfile
+
+# Set permissions so things will work properly
 sudo chmod -R ugo+rw /opt/blu
 
 # Extract the meshblu build to /var/www
-cd /opt/blu
-tar -xzvf ~/*meshblu*.tgz
-mv package meshblu
+# cd /opt/blu
+# tar -xzvf ~/*meshblu*.tgz
+# mv package meshblu
 
-# copy the forever configuration  "forever start server.js --http"
-sudo cp ~/ubuntu_meshblu.conf /etc/init/meshblu.conf
-
-# set the appliance specific server.js config
-sudo cp ~/meshbluConfig.js /opt/blu/meshblu/config.js
-
-# install Meshblu
+# Install Meshblu using npm
 cd /opt/blu/meshblu
-sudo npm install --production --loglevel warn
+sudo npm install --production --unsafe-perm
+
+# Add the Upstart script from meshblu_appliance
+sudo wget --output-document /etc/init/meshblu.conf https://raw.githubusercontent.com/brianehlert/meshblu_appliance/master/ubuntu_meshblu.conf 
+
+# Build a unique configuration for this Meshblu instance
+uuid=$(uuidgen)
+token=$(uuidgen)
+deviceUuid=$(uuidgen)
+deviceToken=$(uuidgen)
+
+echo > /opt/blu/meshblu/config.js
+echo "module.exports = {" >> /opt/blu/meshblu/config.js
+echo "  port: 3000," >> /opt/blu/meshblu/config.js
+echo "  log: true," >> /opt/blu/meshblu/config.js
+echo "  uuid: '$uuid'," >> /opt/blu/meshblu/config.js
+echo "  token: '${token//-/}'," >> /opt/blu/meshblu/config.js
+echo "  mongo: {" >> /opt/blu/meshblu/config.js
+echo "    databaseUrl: 'mongodb://localhost:27017/meshblu'" >> /opt/blu/meshblu/config.js
+echo "  }," >> /opt/blu/meshblu/config.js
+echo "  redis: {" >> /opt/blu/meshblu/config.js
+echo "    host: 'localhost'," >> /opt/blu/meshblu/config.js
+echo "    port: '6379'" >> /opt/blu/meshblu/config.js
+echo "  }," >> /opt/blu/meshblu/config.js
+echo "  coap: {" >> /opt/blu/meshblu/config.js
+echo "    port: 5683," >> /opt/blu/meshblu/config.js
+echo "    host: 'localhost'" >> /opt/blu/meshblu/config.js
+echo "  }," >> /opt/blu/meshblu/config.js
+echo "  mqtt: {" >> /opt/blu/meshblu/config.js
+echo "    databaseUrl: 'mongodb://localhost:27017/mqtt',"  >> /opt/blu/meshblu/config.js
+echo "    port: 1883," >> /opt/blu/meshblu/config.js
+echo "    skynetPass: '${token//-/}${deviceToken//-/}'" >> /opt/blu/meshblu/config.js
+echo "  }," >> /opt/blu/meshblu/config.js
+echo "  parentConnection: {" >> /opt/blu/meshblu/config.js
+echo "    // uuid: '$deviceUuid'," >> /opt/blu/meshblu/config.js
+echo "    // token: '${deviceToken//-/}'," >> /opt/blu/meshblu/config.js
+echo "    // server: 'meshblu.octoblu.com'," >> /opt/blu/meshblu/config.js
+echo "    // port: 80" >> /opt/blu/meshblu/config.js
+echo "  }" >> /opt/blu/meshblu/config.js
+echo "};" >> /opt/blu/meshblu/config.js
+	
+# To configure this Meshblu instance to call home to Octoblu (the cloud service):
+#		a. stop the service if it is running
+#          sudo service meshblu stop
+#		b. Uncomment the parent connection section and note the UUID in the section
+#		   This UUID and Token is the device identity in the Octoblu database.
+#		c. Start the service
+#          sudo service meshblu start
+#		d. Claim the device in Octoblu using the parent connection UUID
+
+#	For testing the Service can be started and stopped manually by:
+#	sudo service meshblu start
+#	sudo service meshblu stop
+#	Logs at:  /opt/blu/log
 
 # Meshblu listener ports: 3000 (Meshblu) 5683 (CoAP) 1883 (MQTT) 
 # Services listener ports:  6379 (redis) 27017 (MongoDB)

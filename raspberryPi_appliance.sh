@@ -56,7 +56,6 @@ sudo chmod -R ugo+rw /opt/blu
 
 # Install Meshblu using npm
 cd /opt/blu/meshblu
-npm install mosca --save
 sudo npm install --production --unsafe-perm
 
 # Add the Upstart script from meshblu_appliance
@@ -74,16 +73,16 @@ echo "  port: 3000," >> /opt/blu/meshblu/config.js
 echo "  log: true," >> /opt/blu/meshblu/config.js
 echo "  uuid: '$uuid'," >> /opt/blu/meshblu/config.js
 echo "  token: '${token//-/}'," >> /opt/blu/meshblu/config.js
+echo "  mqtt: {" >> /opt/blu/meshblu/config.js
+echo "    port: 1883," >> /opt/blu/meshblu/config.js
+echo "    skynetPass: '${token//-/}${deviceToken//-/}'" >> /opt/blu/meshblu/config.js
+echo "  }," >> /opt/blu/meshblu/config.js
 echo "  parentConnection: {" >> /opt/blu/meshblu/config.js
 echo "    // uuid: '$deviceUuid'," >> /opt/blu/meshblu/config.js
 echo "    // token: '${deviceToken//-/}'," >> /opt/blu/meshblu/config.js
 echo "    // server: 'meshblu.octoblu.com'," >> /opt/blu/meshblu/config.js
 echo "    // port: 80" >> /opt/blu/meshblu/config.js
-echo "  }," >> /opt/blu/meshblu/config.js
-echo "  mqtt: {" >> /opt/blu/meshblu/config.js
-echo "    port: 1883," >> /opt/blu/meshblu/config.js
-echo "    skynetPass: '${token//-/}${deviceToken//-/}'" >> /opt/blu/meshblu/config.js
-echo "  }," >> /opt/blu/meshblu/config.js
+echo "  }" >> /opt/blu/meshblu/config.js
 echo "};" >> /opt/blu/meshblu/config.js
 	
 # To configure this Meshblu instance to call home to Octoblu (the cloud service):
