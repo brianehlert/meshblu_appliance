@@ -1,11 +1,10 @@
 #!/bin/bash 
 # Ubuntu 14.10
-# run this script outside of the /meshblu folder as it deletes the folder
-# Copy the Meshblu folder
-# copy this script
+# download this script to your home directory.
 # set the permissions:  chmod +x install.sh
 # run the script (without sudo):  ./install.sh
 # This requires an internet connection to pull source.
+# this builds the meshblu application in place as well as adds mongodb and redis-server
 
 # install core system services
 sudo apt-get install -y build-essential supervisor 
@@ -61,6 +60,12 @@ if [ `getconf LONG_BIT` = "64" ]
 		echo "Assuming 32-bit system. Nothing more to see here. Move along."
 fi
 
+# add Git
+sudo apt-get install -y git-core
+
+# set git to use https instead: of git: - not always necessary, but solves port blocking problems
+sudo git config --global url.https://.insteadOf git://
+
 ### Install Meshblu the messaging platform
 # Make the meshblu directories
 sudo mkdir -p /opt/blu/meshblu
@@ -79,11 +84,6 @@ sudo rm /opt/blu/meshblu/Dockerfile
 
 # Set permissions so things will work properly
 sudo chmod -R ugo+rw /opt/blu
-
-# Extract the meshblu build to /var/www
-# cd /opt/blu
-# tar -xzvf ~/*meshblu*.tgz
-# mv package meshblu
 
 # Install Meshblu using npm
 cd /opt/blu/meshblu

@@ -21,7 +21,7 @@ sudo git config --global url.https://.insteadOf git://
 sudo npm install -y -g forever
 
 # install of node-gyp for building
-sudo npm install -y -g node-gyp
+# sudo npm install -y -g node-gyp
 
 # Install Upstart - used due to process forking and sysvinit losing track of the fork
 echo ""
